@@ -1,7 +1,13 @@
 export const intialState = {
-    loginLoading: false, // 로그인 시도중
-    isLoggedIn: false,
-    isLoggingOut: false, // 로그아웃 시도중
+    logInLoading: false, // 로그인 시도중
+    logInDone: false,
+    logInError: null,
+    logOutLoading: false, // 로그아웃 시도중
+    logOutDone: false,
+    logOutError: null,
+    singUpLoading: false, // 회원가입 시도중
+    singUpDone: false,
+    singUpError: null,
     me: null,
     signUpData: {},
     loginData: {},
@@ -27,6 +33,15 @@ export const UNFOLLOW_REQUEST = "UNFOLLOW_REQUEST";
 export const UNFOLLOW_SUCCESS = "UNFOLLOW_SUCCESS";
 export const UNFOLLOW_FAILURE = "UNFOLLOW_FAILURE";
 
+const dummyUser = (data) => ({
+    ...data,
+    nickname: "안수환",
+    id: 1,
+    Posts: [],
+    Followings: [],
+    Followers: [],
+});
+
 export const loginRequestAction = (data) => {
     return {
         type: LOG_IN_REQUEST,
@@ -45,37 +60,63 @@ const reducer = (state = intialState, action) => {
         case LOG_IN_REQUEST:
             return {
                 ...state,
-                isLoggingIn: true,
+                logInLoading: true,
+                logInError: null,
+                logInDone: false,
             };
         case LOG_IN_SUCCESS:
             return {
                 ...state,
-                isLoggingIn: false,
-                isLoggedIn: true,
-                me: { ...action.data, nickname: "안수환" },
+                logInLoading: false,
+                logInDone: true,
+                me: dummyUser(action.data),
             };
         case LOG_IN_FAILURE:
             return {
                 ...state,
-                isLoggedIn: false,
-                isLoggingIn: false,
+                logInLoading: false,
+                logInError: false,
             };
+
         case LOG_OUT_REQUEST:
             return {
                 ...state,
-                isLoggingOut: true,
+                logOutLoading: true,
+                logOutDone: false,
+                logOutError: null,
             };
         case LOG_OUT_SUCCESS:
             return {
                 ...state,
-                isLoggingOut: false,
-                isLoggedIn: false,
+                logOutLoading: false,
+                logOutDone: true,
                 me: null,
             };
         case LOG_OUT_FAILURE:
             return {
                 ...state,
-                isLoggingOut: false,
+                logOutLoading: false,
+                logOutError: action.error,
+            };
+
+        case SIGN_UP_REQUEST:
+            return {
+                ...state,
+                signUpLoading: true,
+                signUpDone: false,
+                singUpError: null,
+            };
+        case SIGN_UP_SUCCESS:
+            return {
+                ...state,
+                signUpLoading: false,
+                signUpDone: true,
+            };
+        case SIGN_UP_FAILURE:
+            return {
+                ...state,
+                signUpLoading: false,
+                singUpError: action.error,
             };
         default:
             return state;
