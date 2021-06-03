@@ -4,6 +4,8 @@ import { Form, Input, Checkbox, Button } from "antd";
 import AppLayout from "../compoments/AppLayout";
 import useInput from "../hooks/useInput";
 import styled from "styled-components";
+import { useDispatch, useSelector } from "react-redux";
+import { SIGN_UP_REQUEST } from "../reduers/user";
 // const [passwordCheck, onChangePasswordCheck] = useInput("");
 // 패스워드 체크는 다른지 같은지 확인 해야되서 커스텀 훅 사용 안함
 const ErrorMessage = styled.div`
@@ -11,7 +13,10 @@ const ErrorMessage = styled.div`
 `;
 
 const Signup = () => {
-    const [id, onChangeId] = useInput("");
+    const dispatch = useDispatch();
+    const { signUpLoading } = useSelector((state) => state.user);
+
+    const [email, onChangEmail] = useInput("");
     const [nickname, onChangeNickname] = useInput("");
     const [password, onChangePassword] = useInput("");
 
@@ -33,11 +38,20 @@ const Signup = () => {
         setTermError(false);
     }, []);
     const onSunmit = useCallback(() => {
-        if (password !== passwordCheck) return setPasswordError(true);
-        if (!term) return setTermError(true);
+        if (password !== passwordCheck) {
+            return setPasswordError(true);
+        }
+        if (!term) {
+            return setTermError(true);
+        }
 
-        console.log(id, nickname, password);
-    }, [password, passwordCheck, term]);
+        console.log(email, nickname, password);
+
+        dispatch({
+            type: SIGN_UP_REQUEST,
+            data: { email, password, nickname },
+        });
+    }, [email, password, passwordCheck, term]);
 
     return (
         <AppLayout>
@@ -46,13 +60,14 @@ const Signup = () => {
             </Head>
             <Form onFinish={onSunmit}>
                 <div>
-                    <label htmlFor="user-id">아이디</label>
+                    <label htmlFor="user-email">이메일</label>
                     <br />
                     <Input
-                        name="user-id"
-                        value={id}
+                        name="user-email"
+                        type="email"
+                        value={email}
                         required
-                        onChange={onChangeId}
+                        onChange={onChangEmail}
                     />
                 </div>
                 <div>
@@ -105,7 +120,11 @@ const Signup = () => {
                     )}
                 </div>
                 <div style={{ marginTop: 10 }}>
-                    <Button type="primary" htmlType="submit">
+                    <Button
+                        type="primary"
+                        htmlType="submit"
+                        loading={signUpLoading}
+                    >
                         가입하기
                     </Button>
                 </div>

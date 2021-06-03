@@ -38,6 +38,9 @@ export const intialState = {
     addPostLoading: false,
     addPostDone: false,
     addPostError: null,
+    addCommentLoading: false,
+    addCommentDone: false,
+    addCommentError: null,
 };
 
 export const ADD_POST_REQUEST = "ADD_POST_REQUEST";
@@ -53,7 +56,7 @@ export const addPost = (data) => ({
     data,
 });
 
-export const addPost = (data) => ({
+export const addComment = (data) => ({
     type: ADD_COMMENT_REQUEST,
     data,
 });
@@ -88,8 +91,27 @@ const reducer = (state = intialState, action) => {
         case ADD_POST_FAILURE:
             return {
                 ...state,
-                addPostLoading: false,
-                addPostError: action.error,
+                addCommentLoading: false,
+                addCommentError: action.error,
+            };
+        case ADD_COMMENT_REQUEST:
+            return {
+                ...state,
+                addCommentLoading: true,
+                addCommentDone: false,
+                addCommentError: null,
+            };
+        case ADD_COMMENT_SUCCESS:
+            return {
+                ...state,
+                addCommentLoading: false,
+                addCommentDone: true,
+            };
+        case ADD_COMMENT_FAILURE:
+            return {
+                ...state,
+                addCommentLoading: false,
+                addCommentError: action.error,
             };
         default:
             return state;
