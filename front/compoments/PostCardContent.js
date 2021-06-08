@@ -7,6 +7,7 @@ const PostCardContent = ({ postDate }) => (
     {postDate.split(/(#[^\s#]+)/g).map((v, i) => {
       if (v.match(/(#[^\s#]+)/)) {
         return (
+          // eslint-disable-next-line react/no-array-index-key
           <Link href={`/hashtap/${v.slice(1)}`} key={i}>
             <a>{v}</a>
           </Link>
