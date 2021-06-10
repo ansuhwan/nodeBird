@@ -12,6 +12,7 @@ export const intialState = {
   logInLoading: false, // 로그인 시도중
   logInDone: false,
   logInError: null,
+
   logOutLoading: false, // 로그아웃 시도중
   logOutDone: false,
   logOutError: null,
@@ -56,22 +57,22 @@ export const UNFOLLOW_FAILURE = 'UNFOLLOW_FAILURE';
 export const ADD_POST_TO_ME = 'ADD_POST_TO_ME';
 export const REMOVE_POST_OF_ME = 'REMOVE_POST_OF_ME';
 
-const dummyUser = (data) => ({
-  ...data,
-  nickname: '안수환',
-  id: 1,
-  Posts: [{ id: 1 }],
-  Followings: [
-    { id: '블라블라' },
-    { id: '블라블라' },
-    { id: '블라블라' },
-  ],
-  Followers: [
-    { id: '블라블라' },
-    { id: '블라블라' },
-    { id: '블라블라' },
-  ],
-});
+// const dummyUser = (data) => ({
+//   ...data,
+//   nickname: '안수환',
+//   id: 1,
+//   Posts: [{ id: 1 }],
+//   Followings: [
+//     { id: '블라블라' },
+//     { id: '블라블라' },
+//     { id: '블라블라' },
+//   ],
+//   Followers: [
+//     { id: '블라블라' },
+//     { id: '블라블라' },
+//     { id: '블라블라' },
+//   ],
+// });
 
 export const loginRequestAction = (data) => ({
   type: LOG_IN_REQUEST,
@@ -83,6 +84,7 @@ export const logoutRequestAction = () => ({
 });
 
 const reducer = (state = intialState, action) => produce(state, (draft) => {
+  console.log('action', action);
   switch (action.type) {
     case FOLLOW_REQUEST:
       draft.followLoading = true;
@@ -106,7 +108,9 @@ const reducer = (state = intialState, action) => produce(state, (draft) => {
       break;
     case UNFOLLOW_SUCCESS:
       draft.unfollowLoading = false;
-      draft.me.Followings = draft.me.Followings.filter((v) => v.id !== action.data);
+      draft.me.Followings = draft.me.Followings.filter(
+        (v) => v.id !== action.data,
+      );
       draft.unfollowDone = true;
       break;
     case UNFOLLOW_FAILURE:
@@ -121,12 +125,12 @@ const reducer = (state = intialState, action) => produce(state, (draft) => {
       break;
     case LOG_IN_SUCCESS:
       draft.logInLoading = false;
-      draft.me = dummyUser(action.data);
+      draft.me = action.data;
       draft.logInDone = true;
       break;
     case LOG_IN_FAILURE:
       draft.logInLoading = false;
-      draft.logInError = false;
+      draft.logInError = action.error;
       break;
 
     case LOG_OUT_REQUEST:

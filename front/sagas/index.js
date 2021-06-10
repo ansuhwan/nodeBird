@@ -1,4 +1,5 @@
 import { all, fork } from 'redux-saga/effects';
+import axios from 'axios';
 
 // takeEvery 로그인
 // 로그인이 실행 될떄 까지 기다리겠다
@@ -7,6 +8,8 @@ import { all, fork } from 'redux-saga/effects';
 
 import postSaga from './post';
 import userSaga from './user';
+
+axios.defaults.baseURL = 'http://localhost:3065';
 
 export default function* rootSaga() {
   yield all([

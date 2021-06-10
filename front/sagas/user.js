@@ -18,10 +18,9 @@ import {
   UNFOLLOW_SUCCESS,
 } from '../reduers/user';
 
-// function logInAPI(data) {
-//   return axios.post('/api/login', data);
-// }
-
+function logInAPI(data) {
+  return axios.post('/user/login', data);
+}
 /*
 const test = logIn({type: 'LOG_IN_REQUEST', data: {id: 'dkstn1230@naver.com'}})
 test.next();
@@ -36,19 +35,18 @@ test.next();
 function* logIn(action) {
   try {
     // 첫번째 자리가 함수고 그 다음부터는 매개변수들
-
-    // const result = yield call(logInAPI, action.data);
-    yield delay(2000);
+    const result = yield call(logInAPI, action.data);
 
     // fork 를 사용하면 axios.post("/api/login");이거나 마찬가지 다
     // call 를 하면 axios.post("/api/login").then(() => {}) 이거랑 비슷하다
     // 정리하면 결과를 받아올떄 까지 기다리느냐 아니면 그냥 바로 넘어가느냐
     yield put({
       type: LOG_IN_SUCCESS,
-      data: action.data,
+      data: result.data,
       // data: result.data,
     });
   } catch (err) {
+    console.log('찾고싶다', err);
     yield put({
       type: LOG_IN_FAILURE,
       error: err.response.data,
@@ -77,7 +75,7 @@ function* logOut() {
 }
 
 function signUpAPI(data) {
-  return axios.post('http://localhost:3065/user', data);
+  return axios.post('/user', data);
 }
 
 function* signUp(action) {

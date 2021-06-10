@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const env = process.env.NODE_ENV || 'development';
-const config = require('../config/config.json')[env];
+const config = require('../config/config')[env];
 const db = {};
 
 // 시쿼라이즈가 노드랑 마이에스큐엘 를 연결 하게 도와준다
