@@ -3,8 +3,10 @@ const cors = require('cors');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const passport = require('passport');
+const morgan = require('morgan');
 
 const postRouter = require('./routers/post');
+const postsRouter = require('./routers/posts');
 const userRouter = require('./routers/user');
 const db = require('./models');
 const passportConfig = require('./passport');
@@ -26,10 +28,12 @@ db.sequelize
 // app.options : 찔러보기
 // app.head : 헤더만 가져오기
 passportConfig();
+
+app.use(morgan('dev'));
 app.use(
   cors({
-    origin: true,
-    credentials: false,
+    origin: 'http://localhost:3000',
+    credentials: true,
   })
 );
 app.use(express.json());
@@ -45,24 +49,29 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.get('/', (req, res) => {
-  res.send('hello express');
-});
+// app.get('/', (req, res) => {
+//   res.send('hello express');
+// });
 
-app.get('/', (req, res) => {
-  res.send('hello apl');
-});
+// app.get('/', (req, res) => {
+//   res.send('hello apl');
+// });
 
-app.get('/posts', (req, res) => {
-  res.json([
-    { id: 1, content: 'hello' },
-    { id: 2, content: 'hello2' },
-    { id: 3, content: 'hello3' },
-  ]);
-});
+// app.get('/posts', (req, res) => {
+//   res.json([
+//     { id: 1, content: 'hello' },
+//     { id: 2, content: 'hello2' },
+//     { id: 3, content: 'hello3' },
+//   ]);
+// });
 
 app.use('/post', postRouter);
+app.use('/posts', postsRouter);
 app.use('/user', userRouter);
+
+// app.use((err, req, res, next) => {
+
+// })
 
 app.listen(3065, () => {
   console.log('서버 실행 중');

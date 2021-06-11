@@ -16,13 +16,20 @@ const ErrorMessage = styled.div`
 
 const Signup = () => {
   const dispatch = useDispatch();
-  const { signUpLoading, singUpDone, singUpError } = useSelector(
+  const { signUpLoading, singUpDone, singUpError, me } = useSelector(
     (state) => state.user,
   );
 
   useEffect(() => {
+    if (me && me.id) {
+      // 푸쉬를 하면 그냥 뒤로 가고 기록은 남지만 리플레이스 하면 기록에서 사라진다
+      Router.replace('/');
+    }
+  }, [me && me.id]);
+
+  useEffect(() => {
     if (singUpDone) {
-      Router.push('/');
+      Router.replace('/');
     }
   }, [singUpDone]);
 

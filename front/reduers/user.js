@@ -1,6 +1,10 @@
 import produce from 'immer';
 
 export const intialState = {
+  loadUserLoading: false, // 유저 정보 시도중
+  loadUserDone: false,
+  loadUserError: null,
+
   followLoading: false, // 팔로우 시도중
   followDone: false,
   followError: null,
@@ -29,6 +33,10 @@ export const intialState = {
   signUpData: {},
   loginData: {},
 };
+
+export const LOAD_ME_INFO_REQUEST = 'LOAD_ME_INFO_REQUEST';
+export const LOAD_ME_INFO_SUCCESS = 'LOAD_ME_INFO_SUCCESS';
+export const LOAD_ME_INFO_FAILURE = 'LOAD_ME_INFO_FAILURE';
 
 export const LOG_IN_REQUEST = 'LOG_IN_REQUEST';
 export const LOG_IN_SUCCESS = 'LOG_IN_SUCCESS';
@@ -84,8 +92,22 @@ export const logoutRequestAction = () => ({
 });
 
 const reducer = (state = intialState, action) => produce(state, (draft) => {
-  console.log('action', action);
   switch (action.type) {
+    case LOAD_ME_INFO_REQUEST:
+      draft.loadUserLoading = true;
+      draft.loadUserError = null;
+      draft.loadUserDone = false;
+      break;
+    case LOAD_ME_INFO_SUCCESS:
+      draft.loadUserLoading = false;
+      draft.me = action.data;
+      draft.loadUserDone = true;
+      break;
+    case LOAD_ME_INFO_FAILURE:
+      draft.loadUserLoading = false;
+      draft.loadUserError = false;
+      break;
+
     case FOLLOW_REQUEST:
       draft.followLoading = true;
       draft.followError = null;
@@ -135,8 +157,8 @@ const reducer = (state = intialState, action) => produce(state, (draft) => {
 
     case LOG_OUT_REQUEST:
       draft.logOutLoading = true;
-      draft.logOutDone = false;
       draft.logOutError = null;
+      draft.logOutDone = false;
       break;
     case LOG_OUT_SUCCESS:
       draft.logOutLoading = false;

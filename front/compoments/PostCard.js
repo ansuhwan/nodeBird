@@ -35,6 +35,8 @@ const PostCard = ({ post }) => {
     });
   }, []);
 
+  console.log('post', post);
+
   const id = useSelector((state) => state.user.me?.id);
   return (
     <div style={{ marginBottom: 10 }}>
@@ -94,13 +96,16 @@ const PostCard = ({ post }) => {
             itemLayout="horizontal"
             dataSource={post.Comments}
             renderItem={(item) => (
-              <li>
-                <Comment
-                  author={item.User.nickname}
-                  avatar={<Avatar>{item.User.nickname[0]}</Avatar>}
-                  content={item.content}
-                />
-              </li>
+              <>
+                {console.log(item)}
+                <li>
+                  <Comment
+                    author={item.User.nickname}
+                    avatar={<Avatar>{item.User.nickname[0]}</Avatar>}
+                    content={item.content}
+                  />
+                </li>
+              </>
             )}
           />
         </div>
@@ -117,7 +122,7 @@ PostCard.propTypes = {
     User: PropTypes.object,
     content: PropTypes.string,
     // eslint-disable-next-line react/forbid-prop-types
-    createdAt: PropTypes.object,
+    createdAt: PropTypes.string,
     Comments: PropTypes.arrayOf(PropTypes.object),
     Images: PropTypes.arrayOf(PropTypes.object),
   }).isRequired,

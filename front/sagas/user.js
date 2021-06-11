@@ -16,11 +16,34 @@ import {
   FOLLOW_REQUEST,
   UNFOLLOW_REQUEST,
   UNFOLLOW_SUCCESS,
+  LOAD_ME_INFO_FAILURE,
+  LOAD_ME_INFO_SUCCESS,
+  LOAD_ME_INFO_REQUEST,
 } from '../reduers/user';
+
+function loadUserAPI() {
+  return axios.get('/user');
+}
+
+function* loadUser() {
+  try {
+    const result = yield call(loadUserAPI);
+    yield put({
+      type: LOAD_ME_INFO_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    yield put({
+      type: LOAD_ME_INFO_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
 
 function logInAPI(data) {
   return axios.post('/user/login', data);
 }
+
 /*
 const test = logIn({type: 'LOG_IN_REQUEST', data: {id: 'dkstn1230@naver.com'}})
 test.next();
@@ -46,7 +69,6 @@ function* logIn(action) {
       // data: result.data,
     });
   } catch (err) {
-    console.log('찾고싶다', err);
     yield put({
       type: LOG_IN_FAILURE,
       error: err.response.data,
@@ -54,15 +76,14 @@ function* logIn(action) {
   }
 }
 
-// function logOutAPI() {
-//   return axios.post('/api/logout');
-// }
+function logOutAPI() {
+  console.log('로그아웃 실행됨');
+  return axios.post('/user/logout');
+}
 
 function* logOut() {
   try {
-    // const result = yield call(logOutAPI);
-    yield delay(2000);
-
+    yield call(logOutAPI);
     yield put({
       type: LOG_OUT_SUCCESS,
     });
@@ -154,6 +175,9 @@ function* unFollow(action) {
 //   }
 // }
 
+function* watchLoadUser() {
+  yield takeLatest(LOAD_ME_INFO_REQUEST, loadUser);
+}
 function* watchFollow() {
   yield takeLatest(FOLLOW_REQUEST, follow);
 }
@@ -172,6 +196,7 @@ function* watchSignUp() {
 
 export default function* userSaga() {
   yield all([
+    fork(watchLoadUser),
     fork(watchFollow), // call 이랑 다름
     fork(watchUnfollow),
     fork(watchLogIn),
