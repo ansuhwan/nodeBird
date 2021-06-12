@@ -16,7 +16,7 @@ const ErrorMessage = styled.div`
 
 const Signup = () => {
   const dispatch = useDispatch();
-  const { signUpLoading, singUpDone, singUpError, me } = useSelector(
+  const { signUpLoading, signUpDone, singUpError, me } = useSelector(
     (state) => state.user,
   );
 
@@ -28,16 +28,16 @@ const Signup = () => {
   }, [me && me.id]);
 
   useEffect(() => {
-    if (singUpDone) {
+    if (signUpDone) {
       Router.replace('/');
     }
-  }, [singUpDone]);
+  }, [signUpDone]);
 
   useEffect(() => {
-    if (singUpError) {
+    if (signUpDone) {
       message.error(singUpError);
     }
-  }, [singUpError]);
+  }, [signUpDone]);
 
   const [email, onChangEmail] = useInput('');
   const [nickname, onChangeNickname] = useInput('');
