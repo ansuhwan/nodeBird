@@ -36,13 +36,9 @@ const PostForm = () => {
         placeholder="오늘은 어떤 일이 있었나요?"
       />
       <div>
-        <input type="file" multiple hidden ref={imageInput} />
+        <input type="file" name="image" multiple hidden ref={imageInput} />
         <Button onClick={onClickImageUpload}>이미지 업로드</Button>
-        <Button
-          type="primary"
-          style={{ float: 'right' }}
-          htmlType="submit"
-        >
+        <Button type="primary" style={{ float: 'right' }} htmlType="submit">
           짹짹
         </Button>
       </div>
