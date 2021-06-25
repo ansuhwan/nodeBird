@@ -123,7 +123,9 @@ const reducer = (state = intialState, action) => produce(state, (draft) => {
       break;
     case REMOVE_FOLLOWER_SUCCESS:
       draft.removeFollowerLoading = false;
-      draft.me.Followers = draft.me.Followers.filter((v) => v.id !== action.data.UserId);
+      draft.me.Followers = draft.me.Followers.filter(
+        (v) => v.id !== action.data.UserId,
+      );
       draft.removeFollowerDone = true;
       break;
     case REMOVE_FOLLOWER_FAILURE:
@@ -278,9 +280,7 @@ const reducer = (state = intialState, action) => produce(state, (draft) => {
       //   },
       // };
     case REMOVE_POST_OF_ME:
-      draft.me.Posts = draft.me.Posts.filter(
-        (v) => v.id !== action.data,
-      );
+      draft.me.Posts = draft.me.Posts.filter((v) => v.id !== action.data);
       break;
       // return {
       //   ...state,
