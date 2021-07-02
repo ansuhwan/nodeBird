@@ -1,6 +1,10 @@
 import produce from 'immer';
 
 export const intialState = {
+  loadMeInfoLoading: false, // 유저 정보 시도중
+  loadMeInfoDone: false,
+  loadMeInfoError: null,
+
   loadUserLoading: false, // 유저 정보 시도중
   loadUserDone: false,
   loadUserError: null,
@@ -41,9 +45,14 @@ export const intialState = {
   removeFollowerDone: false,
   removeFollowerError: null,
   me: null,
-  signUpData: {},
-  loginData: {},
+  userInfo: null,
+  // signUpData: {},
+  // loginData: {},
 };
+
+export const LOAD_USER_REQUEST = 'LOAD_USER_REQUEST';
+export const LOAD_USER_SUCCESS = 'LOAD_USER_SUCCESS';
+export const LOAD_USER_FAILURE = 'LOAD_USER_FAILURE';
 
 export const LOAD_ME_INFO_REQUEST = 'LOAD_ME_INFO_REQUEST';
 export const LOAD_ME_INFO_SUCCESS = 'LOAD_ME_INFO_SUCCESS';
@@ -164,16 +173,31 @@ const reducer = (state = intialState, action) => produce(state, (draft) => {
       break;
 
     case LOAD_ME_INFO_REQUEST:
-      draft.loadUserLoading = true;
-      draft.loadUserError = null;
-      draft.loadUserDone = false;
+      draft.loadMeInfoLoading = true;
+      draft.loadMeInfoDone = false;
+      draft.loadMeInfoError = null;
       break;
     case LOAD_ME_INFO_SUCCESS:
-      draft.loadUserLoading = false;
+      draft.loadMeInfoLoading = false;
       draft.me = action.data;
       draft.loadUserDone = true;
       break;
     case LOAD_ME_INFO_FAILURE:
+      draft.loadMeInfoLoading = false;
+      draft.loadMeInfoError = action.error;
+      break;
+
+    case LOAD_USER_REQUEST:
+      draft.loadUserLoading = true;
+      draft.loadUserError = null;
+      draft.loadUserDone = false;
+      break;
+    case LOAD_USER_SUCCESS:
+      draft.loadUserLoading = false;
+      draft.userInfo = action.data;
+      draft.loadUserDone = true;
+      break;
+    case LOAD_USER_FAILURE:
       draft.loadUserLoading = false;
       draft.loadUserError = action.error;
       break;

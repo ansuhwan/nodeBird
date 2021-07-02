@@ -1,60 +1,76 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import AppLayout from "../compoments/AppLayout";
-import PostCard from "../compoments/PostCard";
-import PostForm from "../compoments/postForm";
-import { LOAD_POSTS_REQUEST } from "../reduers/post";
-import { LOAD_ME_INFO_REQUEST } from "../reduers/user";
+import axios from 'axios';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { END } from 'redux-saga';
+import AppLayout from '../compoments/AppLayout';
+import PostCard from '../compoments/PostCard';
+import PostForm from '../compoments/postForm';
+import { LOAD_POSTS_REQUEST } from '../reduers/post';
+import { LOAD_ME_INFO_REQUEST } from '../reduers/user';
+import wrapper from '../store/configureStore';
 
 const Home = () => {
-    const dispatch = useDispatch();
-    const { me } = useSelector((state) => state.user);
-    const { mainPosts, hasMorePosts, loadPostsLoading, retweetError } =
-        useSelector((state) => state.post);
+  const dispatch = useDispatch();
+  const { me } = useSelector((state) => state.user);
+  const {
+    mainPosts,
+    hasMorePosts,
+    loadPostsLoading,
+    retweetError } = useSelector((state) => state.post);
 
-    useEffect(() => {
-        if (retweetError) {
-            return alert(retweetError);
-        }
-    }, [retweetError]);
-    useEffect(() => {
-        dispatch({
-            type: LOAD_ME_INFO_REQUEST,
-        });
-        dispatch({
+  useEffect(() => {
+    if (retweetError) {
+      alert(retweetError);
+    }
+  }, [retweetError]);
+
+  useEffect(() => {
+    function onScroll() {
+      if (
+        window.scrollY + document.documentElement.clientHeight
+        > document.documentElement.scrollHeight - 500
+      ) {
+        if (hasMorePosts && !loadPostsLoading) {
+          const lastId = mainPosts[mainPosts.length - 1]?.id;
+          dispatch({
             type: LOAD_POSTS_REQUEST,
-        });
-    }, []);
-
-    useEffect(() => {
-        function onScroll() {
-            if (
-                window.scrollY + document.documentElement.clientHeight >
-                document.documentElement.scrollHeight - 500
-            ) {
-                if (hasMorePosts && !loadPostsLoading) {
-                  const lastId = mainPosts[mainPosts.length - 1]?.id
-                    dispatch({
-                        type: LOAD_POSTS_REQUEST,
-                        lastId
-                    });
-                }
-            }
+            lastId,
+          });
         }
-        window.addEventListener("scroll", onScroll);
-        return () => {
-            window.removeEventListener("scroll", onScroll);
-        };
-    }, [hasMorePosts, loadPostsLoading, mainPosts]);
+      }
+    }
+    window.addEventListener('scroll', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+    };
+  }, [hasMorePosts, loadPostsLoading, mainPosts]);
 
-    return (
-        <AppLayout>
-            {me && <PostForm />}
-            {mainPosts.map((post) => (
-                <PostCard key={post.id} post={post} />
-            ))}
-        </AppLayout>
-    );
+  return (
+    <AppLayout>
+      {me && <PostForm />}
+      {mainPosts.map((post) => (
+        <PostCard key={post.id} post={post} />
+      ))}
+    </AppLayout>
+  );
 };
+
+export const getServerSideProps = wrapper.getServerSideProps(
+  async (context) => {
+    const cookie = context.req ? context.req.headers.cookie : '';
+    axios.defaults.headers.Cookie = '';
+    if (context.req && cookie) {
+      axios.defaults.headers.Cookie = cookie;
+    }
+    context.store.dispatch({
+      type: LOAD_ME_INFO_REQUEST,
+    });
+    context.store.dispatch({
+      type: LOAD_POSTS_REQUEST,
+    });
+    context.store.dispatch(END);
+    await context.store.sagaTask.toPromise();
+  },
+);
 
 export default Home;
