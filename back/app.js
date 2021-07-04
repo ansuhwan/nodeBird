@@ -9,6 +9,7 @@ const path = require('path');
 const postRouter = require('./routers/post');
 const postsRouter = require('./routers/posts');
 const userRouter = require('./routers/user');
+const hashtagRouter = require('./routers/hashtag');
 const db = require('./models');
 const passportConfig = require('./passport');
 const dotenv = require('dotenv');
@@ -71,6 +72,7 @@ app.use(passport.session());
 app.use('/post', postRouter);
 app.use('/posts', postsRouter);
 app.use('/user', userRouter);
+app.use('/hashtag', hashtagRouter);
 
 // app.use((err, req, res, next) => {
 

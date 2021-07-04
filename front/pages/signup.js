@@ -4,10 +4,13 @@ import Router from 'next/router';
 import { Form, Input, Checkbox, Button, message } from 'antd';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
-
+import axios from 'axios';
+import wrapper from '../store/configureStore';
+import { END } from 'redux-saga';
 import AppLayout from '../compoments/AppLayout';
 import useInput from '../hooks/useInput';
 import { SIGN_UP_REQUEST } from '../reduers/user';
+import { LOAD_POSTS_REQUEST } from '../reduers/post';
 // const [passwordCheck, onChangePasswordCheck] = useInput("");
 // 패스워드 체크는 다른지 같은지 확인 해야되서 커스텀 훅 사용 안함
 const ErrorMessage = styled.div`
@@ -143,5 +146,20 @@ const Signup = () => {
     </AppLayout>
   );
 };
+
+export const getServerSideProps = wrapper.getServerSideProps(
+  async (context) => {
+    const cookie = context.req ? context.req.headers.cookie : '';
+    axios.defaults.headers.Cookie = '';
+    if (context.req && cookie) {
+      axios.defaults.headers.Cookie = cookie;
+    }
+    context.store.dispatch({
+        type: LOAD_POSTS_REQUEST,
+    });
+    context.store.dispatch(END);
+    await context.store.sagaTask.toPromise();
+  },
+);
 
 export default Signup;
