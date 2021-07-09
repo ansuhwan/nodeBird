@@ -194,9 +194,7 @@ const reducer = (state = intialState, action) => produce(state, (draft) => {
       draft.likePostError = null;
       break;
     case LIKE_POST_SUCCESS: {
-      const post = draft.mainPosts.find(
-        (v) => v.id === action.data.PostId,
-      );
+      const post = draft.mainPosts.find((v) => v.id === action.data.PostId);
       post.Likers.push({ id: action.data.UserId });
       draft.likePostLoading = false;
       draft.likePostDone = true;
@@ -214,12 +212,8 @@ const reducer = (state = intialState, action) => produce(state, (draft) => {
       break;
     case UNLIKE_POST_SUCCESS:
       {
-        const post = draft.mainPosts.find(
-          (v) => v.id === action.data.PostId,
-        );
-        post.Likers = post.Likers.filter(
-          (v) => v.id !== action.data.UserId,
-        );
+        const post = draft.mainPosts.find((v) => v.id === action.data.PostId);
+        post.Likers = post.Likers.filter((v) => v.id !== action.data.UserId);
         draft.unlikePostLoading = false;
         draft.unlikePostDone = true;
       }
@@ -307,9 +301,7 @@ const reducer = (state = intialState, action) => produce(state, (draft) => {
       draft.addCommentError = null;
       break;
     case ADD_COMMENT_SUCCESS: {
-      const post = draft.mainPosts.find(
-        (v) => v.id === action.data.PostId,
-      );
+      const post = draft.mainPosts.find((v) => v.id === action.data.PostId);
       post.Comments.unshift(action.data);
       draft.addCommentLoading = false;
       draft.addCommentDone = true;
