@@ -3,6 +3,7 @@ import { Button, Form, Input } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { ADD_POST_REQUEST, UPLOAD_IMAGES_REQUEST } from '../reduers/post';
 import useInput from '../hooks/useInput';
+import { InputStyld } from './styledComponent/postFormStyled';
 
 const PostForm = () => {
   const { imagePaths, addPostDone, REMOVE_IMAGE } = useSelector(
@@ -61,12 +62,15 @@ const PostForm = () => {
       encType="multipart/from-data"
       onFinish={onSubmit}
     >
-      <Input.TextArea
-        value={text}
-        onChange={onChangeText}
-        maxLength={140}
-        placeholder="오늘은 어떤 일이 있었나요?"
-      />
+      <InputStyld>
+        <Input.TextArea
+          value={text}
+          onChange={onChangeText}
+          maxLength={140}
+          placeholder="오늘은 어떤 일이 있었나요?"
+        />
+        <span>{text.length}/500</span>
+      </InputStyld>
       <div>
         <input
           type="file"

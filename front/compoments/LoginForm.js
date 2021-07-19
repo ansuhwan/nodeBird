@@ -20,14 +20,11 @@ const LoginForm = () => {
   const [email, onChangeEmail] = useInput('');
   const [password, onChangePassword] = useInput('');
 
-  console.log(logInError);
-
   useEffect(() => {
     if (logInError) {
       message.error(logInError);
     }
   }, [logInError]);
-
   // onFinish 는 이미  e.preventdefault() 가 적용이 되어있다 그래서 사용 안하는것
   const onsubmitForm = useCallback(() => {
     dispatch(loginRequestAction({ email, password }));
