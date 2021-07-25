@@ -43,7 +43,7 @@ if (process.env.NODE_ENV === "production") {
 
 app.use(
     cors({
-        origin: ["http://localhost:3000", "shsns.com"],
+        origin: ["http://localhost:3000", "shsns.com", "http://13.124.175.23"],
         credentials: true,
     })
 );
