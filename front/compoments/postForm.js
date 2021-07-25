@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ADD_POST_REQUEST, UPLOAD_IMAGES_REQUEST } from '../reduers/post';
 import useInput from '../hooks/useInput';
 import { InputStyld } from './styledComponent/postFormStyled';
+import { backUrl } from '../config/config';
 
 const PostForm = () => {
   const { imagePaths, addPostDone, REMOVE_IMAGE } = useSelector(
@@ -89,7 +90,7 @@ const PostForm = () => {
         {imagePaths.map((v, i) => (
           <div key={v} style={{ display: 'inline-block' }}>
             <img
-              src={`http://localhost:3065/${v}`}
+              src={`${backUrl}/${v}`}
               style={{ width: '200px' }}
               alt={v}
             />
